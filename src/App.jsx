@@ -8,7 +8,7 @@ export default function App() {
   })
 
   useEffect(() => {
-    const target = Date.now() + 48 * 60 * 60 * 1000
+const target = new Date('2026-05-10T20:00:00').getTime()
 
     const timer = setInterval(() => {
       const difference = target - Date.now()
