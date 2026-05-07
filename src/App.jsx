@@ -1,6 +1,33 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 export default function App() {
+  const [timeLeft, setTimeLeft] = useState({
+    hours: 48,
+    minutes: 0,
+    seconds: 0,
+  })
+
+  useEffect(() => {
+    const target = Date.now() + 48 * 60 * 60 * 1000
+
+    const timer = setInterval(() => {
+      const difference = target - Date.now()
+
+      if (difference <= 0) {
+        clearInterval(timer)
+        return
+      }
+
+      setTimeLeft({
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 48),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+      })
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [])
+
   return (
     <div
       style={{
@@ -37,6 +64,20 @@ export default function App() {
         岁岁相依
       </h2>
 
+      <div
+        style={{
+          display: 'flex',
+          gap: '20px',
+          marginBottom: '40px',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+        }}
+      >
+        <TimeBox label="小时" value={timeLeft.hours} />
+        <TimeBox label="分钟" value={timeLeft.minutes} />
+        <TimeBox label="秒钟" value={timeLeft.seconds} />
+      </div>
+
       <p
         style={{
           fontSize: '22px',
@@ -49,19 +90,37 @@ export default function App() {
         <br />
         为热爱发声，为陪伴坚定。
       </p>
+    </div>
+  )
+}
+
+function TimeBox({ label, value }) {
+  return (
+    <div
+      style={{
+        background: 'rgba(255,255,255,0.08)',
+        padding: '30px',
+        borderRadius: '20px',
+        minWidth: '120px',
+      }}
+    >
+      <div
+        style={{
+          fontSize: '48px',
+          color: '#71ff8f',
+          fontWeight: '900',
+        }}
+      >
+        {String(value).padStart(2, '0')}
+      </div>
 
       <div
         style={{
-          marginTop: '50px',
-          padding: '20px 40px',
-          borderRadius: '20px',
-          background: '#71ff8f',
-          color: '#000',
-          fontWeight: 'bold',
-          fontSize: '24px',
+          marginTop: '10px',
+          color: '#d1d5db',
         }}
       >
-        航琪同行
+        {label}
       </div>
     </div>
   )
